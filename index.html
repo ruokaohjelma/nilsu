@@ -2,7 +2,7 @@
 <html lang="fi">
 <head>
   <meta charset="UTF-8">
-  <title>YHTEINEN KALENTERI 2026</title>
+  <title>NILSU KALENTERI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -10,7 +10,7 @@
 
   <style>
     :root {
-      --bg: #111;
+      --bg: #151;
       --panel: #1c1c1c;
       --panel-2: #181818;
       --line: #333;
@@ -56,13 +56,30 @@
       font-family: "Arial Narrow", Arial, sans-serif;
     }
 
-    .year-wrap {
+    .all-years {
+      max-width: 1400px;
+      margin: 0 auto;
       padding: 10px 16px 30px;
+    }
+
+    .year-block {
+      margin-bottom: 26px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .year-title {
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 700;
+      margin: 0 0 14px;
+      color: #fff;
+    }
+
+    .year-wrap {
       display: grid;
       grid-template-columns: 1fr;
       gap: 18px;
-      max-width: 1400px;
-      margin: 0 auto;
     }
 
     .month {
@@ -191,6 +208,10 @@
     }
 
     @media (max-width: 900px) {
+      .year-title {
+        font-size: 26px;
+      }
+
       .month-title {
         font-size: 22px;
       }
@@ -223,8 +244,21 @@
         padding: 16px 12px 8px;
       }
 
-      .year-wrap {
+      .all-years {
         padding: 8px 8px 20px;
+      }
+
+      .year-block {
+        margin-bottom: 18px;
+        padding-top: 10px;
+      }
+
+      .year-title {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+
+      .year-wrap {
         gap: 12px;
       }
 
@@ -266,11 +300,11 @@
 <body>
 
 <header>
-  <h1>YHTEINEN KALENTERI 2026</h1>
-  <div class="sub">KAIKKI NÄKEVÄT JA VOIVAT MUOKATA SAMOJA MERKINTÖJÄ.</div>
+  <h1>YHTEINEN KALENTERI 2026–2029</h1>
+  <div class="sub">KIRJOITA RUUTUUN VAIN NIMI JA AIKA ESIM "JOUNI 12-19" TAI "SARI KOKO PÄIVÄ</div>
 </header>
 
-<div class="year-wrap" id="calendar"></div>
+<div class="all-years" id="calendar"></div>
 
 <script>
   const firebaseConfig = {
@@ -294,7 +328,8 @@
   ];
 
   const weekdaysFi = ["MA", "TI", "KE", "TO", "PE", "LA", "SU"];
-  const year = 2026;
+  const startYear = 2026;
+  const endYear = 2029;
 
   function pad(num) {
     return String(num).padStart(2, "0");
@@ -316,13 +351,13 @@
     };
   }
 
-  function createMonth(monthIndex) {
+  function createMonth(year, monthIndex) {
     const monthEl = document.createElement("section");
     monthEl.className = "month";
 
     const titleEl = document.createElement("div");
     titleEl.className = "month-title";
-    titleEl.textContent = monthsFi[monthIndex];
+    titleEl.textContent = `${monthsFi[monthIndex]} ${year}`;
 
     const weekdaysEl = document.createElement("div");
     weekdaysEl.className = "weekdays";
@@ -371,7 +406,6 @@
       headEl.appendChild(dateSmallEl);
 
       const textarea = document.createElement("textarea");
-
       const savingEl = document.createElement("div");
       savingEl.className = "saving";
 
@@ -425,8 +459,29 @@
     return monthEl;
   }
 
-  for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
-    calendarEl.appendChild(createMonth(monthIndex));
+  function createYear(year) {
+    const yearBlock = document.createElement("section");
+    yearBlock.className = "year-block";
+
+    const yearTitle = document.createElement("h2");
+    yearTitle.className = "year-title";
+    yearTitle.textContent = year;
+
+    const yearWrap = document.createElement("div");
+    yearWrap.className = "year-wrap";
+
+    for (let monthIndex = 0; monthIndex < 12; monthIndex++) {
+      yearWrap.appendChild(createMonth(year, monthIndex));
+    }
+
+    yearBlock.appendChild(yearTitle);
+    yearBlock.appendChild(yearWrap);
+
+    return yearBlock;
+  }
+
+  for (let year = startYear; year <= endYear; year++) {
+    calendarEl.appendChild(createYear(year));
   }
 </script>
 
