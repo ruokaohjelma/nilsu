@@ -279,6 +279,25 @@
         padding: 5px;
       }
 
+      .special-420 {
+  background: linear-gradient(
+    to bottom,
+    #009b3a 0%,
+    #009b3a 33%,
+    #ffdd00 33%,
+    #ffdd00 66%,
+    #ce1126 66%,
+    #ce1126 100%
+  );
+}
+
+.special-420 textarea,
+.special-420 .day-number {
+  font-family: "Comic Sans MS", cursive !important;
+  color: black !important;
+  font-weight: 700;
+}
+      
       .day-number {
         font-size: 14px;
       }
@@ -390,6 +409,11 @@
 
       const dayEl = document.createElement("div");
       dayEl.className = "day";
+ 
+      if (monthIndex === 3 && day === 20) {
+  dayEl.classList.add("special-420");
+  dayNumberEl.textContent = "420 !!!";
+}
       if (dateStr === todayStr) dayEl.classList.add("today");
 
       const headEl = document.createElement("div");
@@ -399,12 +423,7 @@
       dayNumberEl.className = "day-number";
       dayNumberEl.textContent = day;
 
-      const dateSmallEl = document.createElement("div");
-      dateSmallEl.className = "date-small";
-      dateSmallEl.textContent = `${pad(monthIndex + 1)}-${pad(day)}`;
-
       headEl.appendChild(dayNumberEl);
-      headEl.appendChild(dateSmallEl);
 
       const textarea = document.createElement("textarea");
       const savingEl = document.createElement("div");
