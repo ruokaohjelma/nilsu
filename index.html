@@ -3,298 +3,313 @@
 <head>
   <meta charset="UTF-8">
   <title>NILSU KALENTERI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <style>
-    :root {
-      --bg: #ff0000;
-      --panel: #1c1c1c;
-      --panel-2: #181818;
-      --line: #333;
-      --text: #fff;
-      --muted: #bdbdbd;
-      --today: #0047ff;
+    :root{
+      --bg:#ff0000;
+      --panel:#1c1c1c;
+      --panel-2:#181818;
+      --line:#333;
+      --text:#fff;
+      --muted:#d9d9d9;
+      --today:#0050ff;
     }
 
-    * {
-      box-sizing: border-box;
-      border-radius: 0 !important;
-      text-transform: uppercase;
-      font-style: italic;
-      font-family: "Arial Narrow", Arial, sans-serif;
+    *{
+      box-sizing:border-box;
+      border-radius:0!important;
+      text-transform:uppercase;
+      font-style:italic;
+      font-family:"Arial Narrow", Arial, sans-serif;
     }
 
-    html, body {
-      width: 100%;
-      overflow-x: hidden;
+    html{
+      scroll-behavior:smooth;
     }
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      -webkit-text-size-adjust: 100%;
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
     }
 
-    header {
-      padding: 18px 12px 10px;
-      text-align: center;
+    header{
+      text-align:center;
+      padding:14px 10px 10px;
     }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(22px, 5vw, 34px);
-      line-height: 1;
-      font-weight: 700;
+    h1{
+      margin:0;
+      font-size:clamp(22px,5vw,34px);
+      line-height:1;
+      font-weight:700;
     }
 
-    .sub {
-      margin-top: 8px;
-      color: #ffffff;
-      font-size: clamp(11px, 2.6vw, 15px);
-      line-height: 1.2;
-      font-weight: 700;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
+    .sub{
+      margin-top:6px;
+      font-size:clamp(10px,2.4vw,15px);
+      line-height:1.15;
+      font-weight:700;
+      color:#fff;
     }
 
-    .all-years {
-      width: 100%;
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 6px;
+    .all-years{
+      width:100%;
+      max-width:1500px;
+      margin:0 auto;
+      padding:4px;
     }
 
-    .year-block {
-      margin-bottom: 14px;
-      padding-top: 4px;
+    .year-block{
+      margin-bottom:10px;
     }
 
-    .year-title {
-      margin: 0 0 8px;
-      padding: 0 2px;
-      font-size: clamp(20px, 4.2vw, 34px);
-      line-height: 1;
-      font-weight: 700;
-      color: #fff;
+    .year-title{
+      margin:0 0 6px;
+      padding:0 2px;
+      font-size:clamp(20px,4.2vw,32px);
+      line-height:1;
+      font-weight:700;
     }
 
-    .year-wrap {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
+    .year-wrap{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
     }
 
-    .month {
-      background: var(--panel-2);
-      border: 1px solid var(--line);
-      overflow: hidden;
-      width: 100%;
+    .month{
+      width:100%;
+      border:1px solid var(--line);
+      background:var(--panel-2);
+      overflow:hidden;
+      scroll-margin-top:10px;
     }
 
-    .month-title {
-      padding: 12px 12px;
-      font-size: clamp(18px, 3.8vw, 28px);
-      font-weight: 700;
-      border-bottom: 1px solid var(--line);
-      background: #111;
-      line-height: 1;
+    .month-title{
+      padding:10px;
+      font-size:clamp(16px,4vw,26px);
+      line-height:1;
+      font-weight:700;
+      background:#111;
+      border-bottom:1px solid var(--line);
     }
 
-    .weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      border-bottom: 1px solid var(--line);
-      background: #111;
+    .weekdays{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      background:#111;
+      border-bottom:1px solid var(--line);
     }
 
-    .weekday {
-      padding: 8px 2px;
-      text-align: center;
-      font-size: clamp(10px, 2.3vw, 18px);
-      color: var(--muted);
-      border-right: 1px solid var(--line);
-      font-weight: 700;
-      line-height: 1;
-      overflow: hidden;
+    .weekday{
+      padding:6px 2px;
+      text-align:center;
+      font-size:clamp(9px,2.2vw,14px);
+      line-height:1;
+      font-weight:700;
+      color:var(--muted);
+      border-right:1px solid var(--line);
+      overflow:hidden;
     }
 
-    .weekday:last-child {
-      border-right: 0;
+    .weekday:last-child{
+      border-right:0;
     }
 
-    .days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      width: 100%;
+    .days{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      width:100%;
     }
 
     .day,
-    .empty-day {
-      min-height: 170px;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding: 6px;
-      min-width: 0;
+    .empty-day{
+      min-height:84px;
+      min-width:0;
+      border-right:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      padding:4px;
     }
 
-    .days > *:nth-child(7n) {
-      border-right: 0;
+    .days > *:nth-child(7n){
+      border-right:0;
     }
 
-    .empty-day {
-      background: #0a0a0a;
+    .empty-day{
+      background:#090909;
     }
 
-    .day {
-      background: var(--panel);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .day{
+      background:var(--panel);
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      position:relative;
+      overflow:hidden;
     }
 
-    .day.today {
-      background: var(--today);
+    .day.today{
+      background:var(--today);
     }
 
-    .day-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 4px;
-      min-height: 22px;
+    .day-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      min-height:14px;
     }
 
-    .day-number {
-      font-size: clamp(14px, 2.7vw, 22px);
-      font-weight: 700;
-      color: #fff;
-      line-height: 1;
-      flex: 0 0 auto;
+    .day-number{
+      font-size:clamp(12px,3vw,18px);
+      line-height:1;
+      font-weight:700;
+      flex:0 0 auto;
     }
 
-    textarea {
-      width: 100%;
-      min-height: 110px;
-      flex: 1;
-      resize: none;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: #fff;
-      font-size: clamp(10px, 2vw, 18px);
-      line-height: 1.1;
-      padding: 0;
-      font-weight: 700;
-      overflow-wrap: anywhere;
+    textarea{
+      width:100%;
+      min-height:42px;
+      flex:1;
+      border:0;
+      outline:0;
+      resize:none;
+      background:transparent;
+      color:#fff;
+      padding:0;
+      font-size:clamp(10px,2.5vw,14px);
+      line-height:1.05;
+      font-weight:700;
+      overflow-wrap:anywhere;
     }
 
-    textarea::-webkit-scrollbar {
-      width: 6px;
+    .saving{
+      min-height:10px;
+      font-size:9px;
+      line-height:1;
+      font-weight:700;
+      color:#f0f0f0;
     }
 
-    .saving {
-      font-size: clamp(8px, 1.7vw, 12px);
-      color: #e6e6e6;
-      min-height: 12px;
-      line-height: 1;
-      font-weight: 700;
+    .monster{
+      position:absolute;
+      left:-42px;
+      top:50%;
+      transform:translateY(-50%);
+      width:34px;
+      height:34px;
+      opacity:0;
+      pointer-events:none;
+      z-index:5;
     }
 
-    @media (max-width: 1000px) {
-      .all-years {
-        padding: 4px;
+    .monster svg{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+
+    .monster.run{
+      animation:monster-run 0.9s linear forwards;
+    }
+
+    @keyframes monster-run{
+      0%{
+        left:-42px;
+        opacity:1;
       }
+      12%{
+        opacity:1;
+      }
+      100%{
+        left:calc(100% + 16px);
+        opacity:0;
+      }
+    }
 
-      .year-wrap {
-        gap: 8px;
+    .glitch{
+      animation:text-glitch 0.45s steps(2,end);
+    }
+
+    @keyframes text-glitch{
+      0%{opacity:1;transform:translateX(0);}
+      20%{opacity:.15;transform:translateX(-2px);}
+      40%{opacity:1;transform:translateX(2px);}
+      60%{opacity:.2;transform:translateX(-1px);}
+      100%{opacity:1;transform:translateX(0);}
+    }
+
+    @media (min-width:700px){
+      .all-years{
+        padding:6px;
       }
 
       .day,
-      .empty-day {
-        min-height: 130px;
-        padding: 5px;
+      .empty-day{
+        min-height:120px;
+        padding:5px;
       }
 
-      textarea {
-        min-height: 76px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      header {
-        padding: 14px 8px 8px;
+      textarea{
+        min-height:70px;
       }
 
-      .all-years {
-        padding: 3px;
-      }
-
-      .year-block {
-        margin-bottom: 10px;
-      }
-
-      .year-title {
-        margin-bottom: 6px;
-      }
-
-      .year-wrap {
-        gap: 6px;
-      }
-
-      .month {
-        border-left: 0;
-        border-right: 0;
-      }
-
-      .month-title {
-        padding: 9px 10px;
-      }
-
-      .weekday {
-        padding: 6px 1px;
-      }
-
-      .day,
-      .empty-day {
-        min-height: 86px;
-        padding: 4px;
-      }
-
-      .day-head {
-        min-height: 14px;
-      }
-
-      textarea {
-        min-height: 46px;
-      }
-
-      .saving {
-        min-height: 9px;
+      .saving{
+        font-size:10px;
       }
     }
 
-    @media (max-width: 420px) {
-      .all-years {
-        padding: 2px;
+    @media (min-width:1100px){
+      .day,
+      .empty-day{
+        min-height:160px;
+        padding:6px;
       }
 
-      .month-title {
-        padding: 8px 8px;
+      textarea{
+        min-height:100px;
+      }
+
+      .saving{
+        font-size:11px;
+      }
+    }
+
+    @media (max-width:640px){
+      .all-years{
+        padding:2px;
+      }
+
+      .month{
+        border-left:0;
+        border-right:0;
+      }
+
+      .month-title{
+        padding:8px;
+      }
+
+      .weekday{
+        padding:5px 1px;
       }
 
       .day,
-      .empty-day {
-        min-height: 72px;
-        padding: 3px;
+      .empty-day{
+        min-height:74px;
+        padding:3px;
       }
 
-      textarea {
-        min-height: 34px;
+      textarea{
+        min-height:34px;
+      }
+
+      .saving{
+        font-size:8px;
       }
     }
   </style>
@@ -302,7 +317,7 @@
 <body>
 
 <header>
-  <h1>NILSUN VARAAMIS KALENTEAEGRRAEFDEGFRDGRFEE</h1>
+  <h1>NILSU KALENTERI</h1>
   <div class="sub">RUUTUUN VAIN NIMI JA AIKA ESIM "JOUNI 12-19" TAI "SARI KOKO PÄIVÄ"</div>
 </header>
 
@@ -353,9 +368,45 @@
     };
   }
 
+  function createMonster() {
+    const monster = document.createElement("div");
+    monster.className = "monster";
+    monster.innerHTML = `
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path fill="#9a9a9a" d="M9 38c0-15 11-24 25-24 10 0 17 4 22 11l-8 1 8 5-1 8-6-5c-2 9-10 16-23 16-11 0-17-4-17-12z"/>
+        <circle cx="40" cy="24" r="3" fill="#111"/>
+        <path fill="#777" d="M12 44l-5 8h6l4-7zm10 6l-5 8h6l4-7zm19-1l4 8h6l-5-9zm10-5l5 7h6l-6-8z"/>
+        <path fill="#bdbdbd" d="M45 30c5 0 9 2 12 5-4-1-7 0-10 1z"/>
+      </svg>
+    `;
+    return monster;
+  }
+
+  function maybeTriggerMonster(dayEl, textarea) {
+    const shouldTrigger = Math.random() < 0.1;
+    if (!shouldTrigger) return;
+
+    const monster = dayEl.querySelector(".monster");
+    if (!monster) return;
+
+    monster.classList.remove("run");
+    void monster.offsetWidth;
+    monster.classList.add("run");
+
+    textarea.classList.remove("glitch");
+    void textarea.offsetWidth;
+    textarea.classList.add("glitch");
+
+    setTimeout(() => {
+      textarea.classList.remove("glitch");
+    }, 500);
+  }
+
   function createMonth(year, monthIndex) {
     const monthEl = document.createElement("section");
     monthEl.className = "month";
+    monthEl.dataset.year = String(year);
+    monthEl.dataset.month = String(monthIndex + 1);
 
     const titleEl = document.createElement("div");
     titleEl.className = "month-title";
@@ -394,6 +445,7 @@
 
       if (dateStr === todayStr) {
         dayEl.classList.add("today");
+        monthEl.dataset.hasToday = "true";
       }
 
       const headEl = document.createElement("div");
@@ -408,6 +460,7 @@
       const textarea = document.createElement("textarea");
       const savingEl = document.createElement("div");
       savingEl.className = "saving";
+      const monster = createMonster();
 
       let isUpdatingFromFirebase = false;
 
@@ -434,12 +487,14 @@
       textarea.addEventListener("input", () => {
         if (isUpdatingFromFirebase) return;
         savingEl.textContent = "TALLENTUU...";
+        maybeTriggerMonster(dayEl, textarea);
         saveToFirebase(textarea.value);
       });
 
       dayEl.appendChild(headEl);
       dayEl.appendChild(textarea);
       dayEl.appendChild(savingEl);
+      dayEl.appendChild(monster);
       daysEl.appendChild(dayEl);
     }
 
@@ -483,6 +538,24 @@
   for (let year = startYear; year <= endYear; year++) {
     calendarEl.appendChild(createYear(year));
   }
+
+  function scrollToCurrentMonth() {
+    const today = new Date();
+    const target = document.querySelector(
+      `.month[data-year="${today.getFullYear()}"][data-month="${today.getMonth() + 1}"]`
+    );
+
+    if (!target) return;
+
+    requestAnimationFrame(() => {
+      target.scrollIntoView({
+        behavior: "auto",
+        block: "start"
+      });
+    });
+  }
+
+  window.addEventListener("load", scrollToCurrentMonth);
 </script>
 
 </body>
