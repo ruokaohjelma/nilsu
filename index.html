@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <title>Yhteinen kalenteri 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #111;
+      color: white;
+    }
+
+    h1 {
+      padding: 20px;
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+      padding: 10px;
+    }
+
+    .day {
+      background: #1c1c1c;
+      border: 1px solid #333;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .date {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+
+    textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: white;
+      resize: none;
+      font-size: 12px;
+    }
+
+    textarea:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Kalenteri 2026</h1>
+
+<div class="grid" id="grid"></div>
+
+<script>
+  // 🔥 SUN FIREBASE CONFIG
+  const firebaseConfig = {
+    apiKey: "AIzaSyA_k_wo5Fuehs40B26aN20BVu8rY8DijQI",
+    authDomain: "nilsu-f053a.firebaseapp.com",
+    databaseURL: "https://nilsu-f053a-default-rtdb.firebaseio.com",
+    projectId: "nilsu-f053a",
+    storageBucket: "nilsu-f053a.firebasestorage.app",
+    messagingSenderId: "225502883063",
+    appId: "1:225502883063:web:72e5020f48d1e45e8177f2"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const grid = document.getElementById("grid");
+
+  function createCalendar(year) {
+    const start = new Date(year, 0, 1);
+    const end = new Date(year, 11, 31);
+
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dateStr = d.toISOString().split("T")[0];
+
+      const div = document.createElement("div");
+      div.className = "day";
+
+      const label = document.createElement("div");
+      label.className = "date";
+      label.textContent = dateStr;
+
+      const textarea = document.createElement("textarea");
+
+      // 🔹 LATAA DATA
+      db.ref("calendar/" + dateStr).on("value", snap => {
+        if (snap.exists()) {
+          textarea.value = snap.val();
+        }
+      });
+
+      // 🔹 TALLENNA
+      textarea.addEventListener("input", () => {
+        db.ref("calendar/" + dateStr).set(textarea.value);
+      });
+
+      div.appendChild(label);
+      div.appendChild(textarea);
+      grid.appendChild(div);
+    }
+  }
+
+  createCalendar(2026);
+</script>
+
+</body>
+</html>
